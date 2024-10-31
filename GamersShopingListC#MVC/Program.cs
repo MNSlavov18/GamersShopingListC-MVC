@@ -13,7 +13,7 @@ namespace GamersShopingListC_MVC
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<ApplicationDBContext>(options => 
-            options.UseSqlServer(builder.Configuration.GetConnectionString("GamePortal")));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("GamePortal"))); 
 
             var app = builder.Build();
 

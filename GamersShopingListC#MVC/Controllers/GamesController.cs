@@ -35,7 +35,7 @@ namespace GamersShopingListC_MVC.Controllers
 
             await dBContext.SaveChangesAsync();
 
-            return View();
+            return RedirectToAction("List", "Games");
         }
 
         [HttpGet]
@@ -64,6 +64,22 @@ namespace GamersShopingListC_MVC.Controllers
                 game.Name = viewModel.Name;
                 game.Value = viewModel.Value;
 
+                await dBContext.SaveChangesAsync();
+            }
+
+            return RedirectToAction("List", "Games");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Game viewModel)
+        {
+            var game = await dBContext.Games
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == viewModel.Id);
+
+            if (game is not null)
+            {
+                dBContext.Games.Remove(viewModel);
                 await dBContext.SaveChangesAsync();
             }
 

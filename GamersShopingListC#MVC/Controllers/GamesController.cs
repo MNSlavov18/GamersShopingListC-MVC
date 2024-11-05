@@ -2,6 +2,8 @@
 using GamersShopingListC_MVC.Models;
 using GamersShopingListC_MVC.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace GamersShopingListC_MVC.Controllers
 {
@@ -31,9 +33,41 @@ namespace GamersShopingListC_MVC.Controllers
 
             await dBContext.Games.AddAsync(game);
 
-            await  dBContext.SaveChangesAsync();
+            await dBContext.SaveChangesAsync();
 
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> List()
+        {
+            var games = await dBContext.Games.ToListAsync();
+
+            return View(games);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var game = await dBContext.Games.FindAsync(id);
+
+            return View(game);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Game viewModel)
+        {
+            var game = await dBContext.Games.FindAsync(viewModel.Id);
+
+            if (game is not null)
+            {
+                game.Name = viewModel.Name;
+                game.Value = viewModel.Value;
+
+                await dBContext.SaveChangesAsync();
+            }
+
+            return RedirectToAction("List", "Games");
         }
     }
 }
